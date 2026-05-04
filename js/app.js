@@ -13,20 +13,30 @@
   // ---------- Render service cards ----------
   const grid = document.querySelector('.services__grid');
   if (grid && services) {
-    const html = services.map(s => `
-      <button type="button" class="service-card" role="listitem"
-              data-service-id="${s.id}"
-              data-service-title="${escapeAttr(s.title)}"
-              aria-label="Заказать услугу: ${escapeAttr(s.title)}">
-        <span class="service-card__icon" aria-hidden="true">${icons[s.icon] || ''}</span>
-        <h3 class="service-card__title">${s.title}</h3>
-        <p class="service-card__text">${s.text}</p>
-        <span class="service-card__cta">
-          Связаться
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </span>
-      </button>
-    `).join('');
+    const html = services.map(s => {
+      const isLink = !!s.link;
+      const tag = isLink ? 'a' : 'button';
+      const linkAttrs = isLink
+        ? `href="${s.link}" aria-label="Открыть конструктор: ${escapeAttr(s.title)}"`
+        : `type="button" data-service-id="${s.id}" data-service-title="${escapeAttr(s.title)}" aria-label="Заказать услугу: ${escapeAttr(s.title)}"`;
+      const badge = s.badge
+        ? `<span class="service-card__badge">${s.badge}</span>`
+        : '';
+      const ctaText = isLink ? 'Открыть конструктор' : 'Связаться';
+
+      return `
+        <${tag} class="service-card${isLink ? ' service-card--featured' : ''}" role="listitem" ${linkAttrs}>
+          ${badge}
+          <span class="service-card__icon" aria-hidden="true">${icons[s.icon] || ''}</span>
+          <h3 class="service-card__title">${s.title}</h3>
+          <p class="service-card__text">${s.text}</p>
+          <span class="service-card__cta">
+            ${ctaText}
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
+        </${tag}>
+      `;
+    }).join('');
     grid.innerHTML = html;
   }
 
@@ -80,9 +90,9 @@
     if (lastFocused) lastFocused.focus();
   }
 
-  // Service card click — open modal
+  // Service card click — open modal (только для button-карточек, не для ссылок-конструкторов)
   document.addEventListener('click', (e) => {
-    const card = e.target.closest('.service-card');
+    const card = e.target.closest('button.service-card');
     if (card) {
       const title = card.dataset.serviceTitle;
       openModal(title);

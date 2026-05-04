@@ -63,7 +63,9 @@ window.SYRYM_SERVICES = [
     id: 'monument',
     title: 'Памятники и оградки',
     text: 'Изготовление и установка памятников из гранита и мрамора. Гравировка, портреты, оградки.',
-    icon: 'square'
+    icon: 'square',
+    link: 'monument/',
+    badge: '3D Конструктор'
   },
   {
     id: 'wreaths',
