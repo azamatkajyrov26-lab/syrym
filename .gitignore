@@ -5,3 +5,10 @@ node_modules/
 .idea/
 *.log
 .env
+
+# Reference photos (not for site)
+памятник/
+/650388638_*.jpg
+/652538938_*.jpg
+/654059941_*.jpg
+
